@@ -18,17 +18,81 @@ class Ordered {
 
   /**
    * sets part number of the part ordered
-   * @param {int} partNumber
+   * @param {Number} partNumber
    */
   setPartNumber(partNumber) {
     this.partNumber = partNumber;
   }
 
   /**
-   *returns part of the part ordered
+   *returns part number of the part ordered
    * @returns partNumber
    */
   getPartNumber() {
     this.partNumber;
+  }
+
+  /**
+   * sets description of the part ordered
+   * @param {String} description
+   */
+  setDescription(description) {
+    this.description = description;
+  }
+
+  /**
+   *returns description of the part ordered
+   * @returns description
+   */
+  getDescription() {
+    return this.description;
+  }
+
+  /**
+   * sets unit price for the each part ordered
+   * @param {Number} pricePerPart
+   */
+  setPricePerPart(pricePerPart) {
+    this.pricePerPart = pricePerPart;
+  }
+
+  /**
+   * returns the unit price for each part ordered
+   * @returns pricePerPart
+   */
+  getPricePerPart() {
+    return this.pricePerPart;
+  }
+
+  /**
+   *sets the quantity of the part ordered
+   * @param {Number} quantity
+   */
+  setQuantity(quantity) {
+    this.quantity = quantity;
+  }
+
+  /**
+   * returns quantity of the part ordered
+   * @returns quantity
+   */
+  getQuantity() {
+    return this.quantity;
+  }
+
+  /**
+   * sets true of false as to whether the container is oversize
+   * @param {Boolean} overSizeContainer
+   */
+  setOverSizeContainer(overSizeContainer) {
+    this.overSizeContainer = overSizeContainer;
+  }
+
+  /**
+   * returns true or false as to whether the container is oversize
+   * @returns overSizeContainer
+   */
+  isOverSizeContainer() {
+    return this.overSizeContainer;
   }
 }
