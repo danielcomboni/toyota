@@ -6,7 +6,7 @@ const partOrderedControllerInvoker = require("./public/resources/js/controller/P
 const shippingAndHandlingInvoker = require("./public/resources/js/controller/ShippingAndHandlingController");
 
 // starting the app
-DBUtils.DBUtils.startApp();
+DBUtils.DBUtils.getAppIgnition();
 
 // this.partNumber = 0;
 // this.description = null;
