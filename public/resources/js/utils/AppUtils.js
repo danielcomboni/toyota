@@ -11,7 +11,7 @@ const crypto = require("crypto");
 const mysql = require("mysql");
 // const session = require("express-session");
 
-class DBUtils {
+class AppUtils {
   /**
    * starts the application
    */
@@ -42,5 +42,5 @@ class DBUtils {
 }
 
 module.exports = {
-  DBUtils
+  AppUtils
 };

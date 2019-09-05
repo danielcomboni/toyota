@@ -1,4 +1,4 @@
-const DBUtils = require("./public/resources/js/utils/AppUtils");
+const appUtils = require("./public/resources/js/utils/AppUtils");
 const CustController = require("./public/resources/js/controller/CustomerInformationController");
 
 const partOrderedControllerInvoker = require("./public/resources/js/controller/PartOrderedController");
@@ -6,7 +6,7 @@ const partOrderedControllerInvoker = require("./public/resources/js/controller/P
 const shippingAndHandlingInvoker = require("./public/resources/js/controller/ShippingAndHandlingController");
 
 // starting the app
-DBUtils.DBUtils.getAppIgnition();
+appUtils.AppUtils.getAppIgnition();
 
 // this.partNumber = 0;
 // this.description = null;
@@ -66,3 +66,15 @@ const total = output.cost + output.salesTax + output.shippingAndHandling;
 console.log(".................");
 console.log(output);
 console.log(total);
+
+const dbUtils = require("./public/resources/js/utils/DBUtils");
+
+const toDb = {
+  one: "value one",
+  two: "value two",
+  three: "value three"
+};
+
+let arrayObj = [toDb.one, toDb.two, toDb.three];
+
+dbUtils.DBUtils.insert("the_table_name", ["one", "two", "three"], arrayObj);

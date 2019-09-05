@@ -27,7 +27,7 @@ class DBUtils {
     DBUtils.getConnection().end();
   }
 
-  static insert(tableName, arrayOfColumnNames) {
+  static insert(tableName, arrayOfColumnNames, arrayValuesOfObject) {
     let theArrayOfColumnNames = new Array();
     theArrayOfColumnNames = [...arrayOfColumnNames];
 
@@ -37,15 +37,15 @@ class DBUtils {
       arrayOfWildCards.push("?");
     });
 
-    let sqlStr =
-      `insert into ` +
-      tableName +
-      `(` +
-      theArrayOfColumnNames.join() +
-      `) 
-      
-        values()    
+    // the query string to insert into the database
+    let sqlStr = `insert into ${tableName} (${theArrayOfColumnNames.join()}) values(${arrayOfWildCards.join()})`;
 
-      `;
+    console.log(`\ninsert command::: ${sqlStr} \n`);
+
+    DBUtils.getConnection().query(sqlStr, arrayValuesOfObject);
   }
 }
+
+module.exports = {
+  DBUtils
+};
