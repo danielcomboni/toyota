@@ -35,6 +35,10 @@ class DBUtils {
 
     console.log("App running at Port 3001");
   }
+
+  static getAppIgnition() {
+    return AppUtils.startApp();
+  }
 }
 
 module.exports = {
