@@ -27,13 +27,17 @@ class AppUtils {
 
     app.use(parser.urlencoded({ extended: false }));
 
-    app.get("/", function(req, res) {
-      res.sendfile(html_dir + "index.html");
-    });
+    app.set("view engine", "hbs");
+
+    // app.get("/", function(req, res) {
+    //   res.sendfile(html_dir + "index.html");
+    // });
 
     app.listen(3001);
 
     console.log("App running at Port 3001");
+
+    return app;
   }
 
   static getAppIgnition() {

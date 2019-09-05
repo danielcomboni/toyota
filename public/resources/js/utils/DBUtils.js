@@ -27,6 +27,14 @@ class DBUtils {
     DBUtils.getConnection().end();
   }
 
+  /**
+   *
+   *Accepts a String of tableName, array of column names of the table whose name is specified
+   *and array of values of the request object
+   *  @param {String} tableName
+   * @param {Array} arrayOfColumnNames
+   * @param {Array} arrayValuesOfObject
+   */
   static insert(tableName, arrayOfColumnNames, arrayValuesOfObject) {
     let theArrayOfColumnNames = new Array();
     theArrayOfColumnNames = [...arrayOfColumnNames];
@@ -43,6 +51,66 @@ class DBUtils {
     console.log(`\ninsert command::: ${sqlStr} \n`);
 
     DBUtils.getConnection().query(sqlStr, arrayValuesOfObject);
+
+    DBUtils.closeConnection();
+  }
+
+  /**
+   * accepts 3 params
+   * selectStatement, response and tableName
+   * @param {String} selectStatement
+   * @param {Response} res
+   * @param {String} tableName
+   */
+  static select(selectStatement, res, tableName) {
+    let theRes = Response();
+    theRes = res;
+    DBUtils.getConnection().query(selectStatement, (error, results) => {
+      if (error) throw error;
+
+      theRes.render(tableName, {
+        results: results
+      });
+
+      // close connection to the database
+      DBUtils.closeConnection();
+    });
+  }
+
+  static update(tableName, id, arrayColumnNamesForUpdate, arrayValuesOfObject) {
+    let arrayColumnsName = [];
+    arrayColumnsName = [...arrayColumnNamesForUpdate];
+
+    let theColumnSets = new String();
+
+    arrayColumnsName.forEach((element, index) => {
+      // make sure the last column does not have a comma after its wild card
+      if (index < arrayColumnsName.length - 1) {
+        theColumnSets = theColumnSets.concat(element).concat("=?,");
+      } else {
+        theColumnSets = theColumnSets.concat(element).concat("=?");
+      }
+    });
+
+    console.log(theColumnSets);
+
+    let sqlStr = `update ${tableName} set ${theColumnSets} where id=${id}`;
+
+    console.log(`\nupdate command::: ${sqlStr} \n`);
+
+    DBUtils.getConnection().query(sqlStr, arrayValuesOfObject);
+
+    DBUtils.closeConnection();
+  }
+
+  static delete(tableName, id) {
+    let sqlStr = `delete from ${tableName} where id=?`;
+    let sqlStr2 = `delete from ${tableName} where id=${id}`;
+    console.log(`\ndelete command::: ${sqlStr2} \n`);
+
+    DBUtils.getConnection().query(sqlStr, [id]);
+
+    DBUtils.closeConnection();
   }
 }
 

@@ -77,4 +77,8 @@ const toDb = {
 
 let arrayObj = [toDb.one, toDb.two, toDb.three];
 
-dbUtils.DBUtils.insert("the_table_name", ["one", "two", "three"], arrayObj);
+// dbUtils.DBUtils.insert("the_table_name", ["one", "two", "three"], arrayObj);
+
+// dbUtils.DBUtils.update("name", 1, ["one", "two"], ['one','two']);
+
+// dbUtils.DBUtils.delete('table',5);
