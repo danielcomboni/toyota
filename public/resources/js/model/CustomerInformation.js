@@ -80,3 +80,7 @@ class CustomerInformation {
     return this.retailCustomer;
   }
 }
+
+module.exports = {
+  CustomerInformation
+};

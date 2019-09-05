@@ -63,3 +63,7 @@ class OutPut {
     return this.shippingAndHandling;
   }
 }
+
+module.exports = {
+  OutPut
+};

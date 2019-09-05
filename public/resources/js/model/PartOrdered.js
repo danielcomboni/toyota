@@ -4,7 +4,7 @@
  * This class handles customer information
  *
  */
-class Ordered {
+class PartOdered {
   /**
    * a non-parameterized constructor
    */
@@ -96,3 +96,7 @@ class Ordered {
     return this.overSizeContainer;
   }
 }
+
+module.exports = {
+  PartOdered
+};
