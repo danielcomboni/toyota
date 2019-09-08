@@ -20,6 +20,16 @@ class OutPutController {
     op.setSalesTax(op.salesTax);
     op.setShippingAndHandling(op.shippingAndHandling);
   }
+
+  static finalOutPut(partOrdered, ) {
+    
+    const partOrderedModel = require("../model/PartOrdered");
+    let newPartOrdered = new partOrderedModel.PartOdered();
+    newPartOrdered = partOrdered;
+
+    const 
+
+  }
 }
 
 module.exports = {

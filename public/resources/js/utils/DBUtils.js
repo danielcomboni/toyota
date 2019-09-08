@@ -35,7 +35,7 @@ class DBUtils {
    * @param {Array} arrayOfColumnNames
    * @param {Array} arrayValuesOfObject
    */
-  static insert(tableName, arrayOfColumnNames, arrayValuesOfObject) {
+  static insert(tableName, arrayOfColumnNames, objectToBeInserted) {
     let theArrayOfColumnNames = new Array();
     theArrayOfColumnNames = [...arrayOfColumnNames];
 
@@ -50,9 +50,24 @@ class DBUtils {
 
     console.log(`\ninsert command::: ${sqlStr} \n`);
 
-    DBUtils.getConnection().query(sqlStr, arrayValuesOfObject);
+    let arrayValuesOfObject = [];
+    for (let [key, value] of Object.entries(objectToBeInserted)) {
+      arrayValuesOfObject.push(value);
+    }
 
-    DBUtils.closeConnection();
+    console.log("inserting objects", arrayValuesOfObject);
+
+    return new Promise((resolve, reject) => {
+      DBUtils.getConnection().query(
+        sqlStr,
+        arrayValuesOfObject,
+        (err, result) => {
+          // console.log("insert id:", result.insertId);
+
+          resolve(result.insertId);
+        }
+      );
+    });
   }
 
   /**

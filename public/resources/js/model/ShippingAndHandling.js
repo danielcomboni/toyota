@@ -15,6 +15,7 @@ class ShippingAndHandling {
   constructor() {
     this.shippingMethod = null;
     this.chargePerPart = 0;
+    this.partOrderedId = 0;
   }
 
   /**
@@ -47,6 +48,14 @@ class ShippingAndHandling {
    */
   getChargePerPart() {
     return this.chargePerPart;
+  }
+
+  setPartOrderedId(id) {
+    this.partOrderedId = id;
+  }
+
+  getPartOrderedId() {
+    return this.partOrderedId;
   }
 }
 

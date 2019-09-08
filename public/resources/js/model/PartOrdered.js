@@ -14,6 +14,7 @@ class PartOdered {
     this.pricePerPart = 0;
     this.quantity = 0;
     this.overSizeContainer = false;
+    this.customerInfoId = 1;
   }
 
   /**
@@ -94,6 +95,22 @@ class PartOdered {
    */
   isOverSizeContainer() {
     return this.overSizeContainer;
+  }
+
+  /**
+   * sets the id (foreign key) of the customer info
+   * @param {Number} id
+   */
+  setCustomerInfoId(id) {
+    this.customerInfoId = id;
+  }
+
+  /**
+   * returns customer info id
+   * @returns customerInfoId
+   */
+  getCustomerInfoId() {
+    return this.customerInfoId;
   }
 }
 

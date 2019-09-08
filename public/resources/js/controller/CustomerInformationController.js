@@ -22,6 +22,13 @@ class CustomerInformationController {
     ci.setRetailCustomer(customerInformation.retailCustomer);
     return ci;
   }
+
+  // static postCustomerDetails(app) {
+  //   app.post("/api/toyota/post", (req, res) => {
+  //     console.log(JSON.stringify(req.body));
+  //     res.end();
+  //   });
+  // }
 }
 
 module.exports = {
