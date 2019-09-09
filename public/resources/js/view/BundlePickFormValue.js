@@ -816,7 +816,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":2,"./adapters/xhr":2,"./helpers/normalizeHeaderName":22,"./utils":25,"_process":39}],16:[function(require,module,exports){
+},{"./adapters/http":2,"./adapters/xhr":2,"./helpers/normalizeHeaderName":22,"./utils":25,"_process":40}],16:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -4864,36 +4864,50 @@ const outPutView = require("./OutPutView");
 const axios = require("axios");
 
 const axiosPost = () => {
-  console.log("in here...");
   const data = {
     customerInfo: pickFormValues.customerInfo(),
     partOrdered: pickFormValues.partOrdered(),
     shipping: pickFormValues.shipping()
   };
 
-  // axios
-  //   .post("/api/toyota/post", { data })
-  //   .then(res => {
-  //     outPutView.printOutPut(data);
+  console.log(pickFormValues.returnedFlag.getFlag());
+  return;
 
-  //     swal.fire({
-  //       position: "top-end",
-  //       type: "success",
-  //       title: "successully saved",
-  //       showConfirmButton: false,
-  //       timer: 2000
-  //     });
-  //   })
-  //   .catch(error => {
-  //     console.log("error", error);
-  //     swal.fire({
-  //       position: "top-end",
-  //       type: "error",
-  //       title: "something was wrong",
-  //       showConfirmButton: false,
-  //       timer: 2000
-  //     });
-  //   });
+  if (pickFormValues.returnedFlag == false) {
+    swal.fire({
+      position: "center",
+      type: "warning",
+      title: "empty values",
+      text: "make sure all required fields are filled",
+      showConfirmButton: true,
+      timer: 2000
+    });
+    return;
+  }
+
+  axios
+    .post("/api/toyota/post", { data })
+    .then(res => {
+      outPutView.printOutPut(data);
+
+      swal.fire({
+        position: "top-end",
+        type: "success",
+        title: "successully saved",
+        showConfirmButton: false,
+        timer: 2000
+      });
+    })
+    .catch(error => {
+      console.log("error", error);
+      swal.fire({
+        position: "top-end",
+        type: "error",
+        title: "something was wrong",
+        showConfirmButton: false,
+        timer: 2000
+      });
+    });
 };
 
 const doPost = () => {
@@ -4905,6 +4919,26 @@ const doPost = () => {
 };
 
 doPost();
+
+const closeWindow = () => {
+  pickFormValues.getElById("exit").addEventListener(`click`, e => {
+    window.addEventListener("beforeunload", event => {
+      event.returnValue = `Are you sure you want to leave?`;
+    });
+  });
+};
+
+pickFormValues.getElById(`exit`).addEventListener(`click`, () => {
+  window.close();
+});
+
+// let formChanged = false;
+// myForm.addEventListener("change", () => (formChanged = true));
+// window.addEventListener("beforeunload", event => {
+//   if (formChanged) {
+//     event.returnValue = "You have unfinished changes!";
+//   }
+// });
 
 },{"./OutPutView":36,"./PickFormValues":37,"axios":1,"sweetalert2":27}],36:[function(require,module,exports){
 /**
@@ -4995,6 +5029,9 @@ module.exports = {
 
 },{"../controller/CustomerInformationController":28,"../controller/PartOrderedController":29,"../controller/ShippingAndHandlingController":30,"../model/OutPut":32,"./PickFormValues":37}],37:[function(require,module,exports){
 const Validation = require(`./Validation`);
+const valFlagModel = require('./ValidateFlag');
+
+const returnedFlag = new valFlagModel.ValidateFlag();
 
 const getValueById = id => {
   return document.getElementById(id).value;
@@ -5003,6 +5040,8 @@ const getValueById = id => {
 const getElById = id => {
   return document.getElementById(id);
 };
+
+
 
 /**
  * get customer info
@@ -5015,8 +5054,12 @@ const customerInfo = () => {
   let validateCustomerId = Validation.validateValue(`customer-id-input`,/^\d{3}-\d{2}-\d{4}$/,`customer_span`,`please check id format`);
   // check if id format is not valid
   if(validateCustomerId == false){
-    return;
+      returnedFlag.setFlag(false);
+  }else{
+    returnedFlag.setFlag(true);
   }
+
+  console.log(`customer id`,returnedFlag.getFlag());
 
   // get name
   const customerName = getValueById("customer-name-input");
@@ -5025,14 +5068,19 @@ const customerInfo = () => {
   // check if name is empty
   if(customerName == '' || customerName == null){
     Validation.setStyle(`name_span`,`name can't be empty`);
-    return;
+    returnedFlag.setFlag(false);
+  }else{
+    returnedFlag.setFlag(true);
   }
 
   // check is name format is not valid
   if(validateCustomerName == false){
-    return;
+    returnedFlag.setFlag(false);
+  }else{
+    returnedFlag.setFlag(true);
   }
 
+  console.log(`customer name`,returnedFlag.getFlag());
   // get state
   const state = getValueById("customer-state-input");
 
@@ -5067,11 +5115,17 @@ const partOrdered = () => {
   // check if part number is empty
   if(partNumber == '' || partNumber == null){
     Validation.setStyle(`number_span`,`part number can't be empty`);
-    return;
+    returnedFlag.setFlag(false);
   }
+  else{
+    returnedFlag.setFlag(true);
+  }
+
   // check if part number format is not valid
   if(validatePartNumber == false){
-    return;
+    returnedFlag.setFlag(false);
+  }else{
+    returnedFlag.setFlag(true);
   }
 
   // get description
@@ -5088,31 +5142,34 @@ const partOrdered = () => {
     if(pricePerPart.charCodeAt(0) < 48 || pricePerPart.charCodeAt(0) > 57){
       console.log(`1`)
       Validation.setStyle(`price_span`,`please check your price input`);
-      return;
+      returnedFlag.setFlag(false);
     }else{
       Validation.setStyle(`price_span`,``);
+      returnedFlag.setFlag(true);
     }
-
     
     // make sure the last character is a digit
     if(pricePerPart.charCodeAt(pricePerPart.length-1) < 48 || pricePerPart.charCodeAt(pricePerPart.length-1) > 57){
       console.log(`2`)
       Validation.setStyle(`price_span`,`please check your price input`);
-      return;
+      returnedFlag.setFlag(false);
     }else{
       Validation.setStyle(`price_span`,``);
+      returnedFlag.setFlag(true);
     }
 
     if(pricePerPart.charCodeAt(i) < 46 || pricePerPart.charCodeAt(i) >57 ){
         console.log(`3`);
         Validation.setStyle(`price_span`,`please check your price input`);
-      return;
+        returnedFlag.setFlag(false);
     }else{
       Validation.setStyle(`price_span`,``);
+      returnedFlag.setFlag(true);
     }
 
   }
 
+  console.log(`fdskljgb;kdfnkflb`,returnedFlag.getFlag());
 
   // get quantity
   const quantity = getValueById("quantity-input");
@@ -5121,13 +5178,12 @@ const partOrdered = () => {
   for(let i = 0; i < quantityArray.length; i++){
     if(quantity.charCodeAt(i) < 48 || quantity.charCodeAt(i) > 58){
       Validation.setStyle(`quantity_span`,`please check your quantity input`);
-      return;
+      returnedFlag.setFlag(false);
     }else{
       Validation.setStyle(`quantity_span`,``);
+      returnedFlag.setFlag(true);
     }
   }
-
-
 
   const overSizeEl = getElById("oversize");
 
@@ -5138,6 +5194,8 @@ const partOrdered = () => {
   } else {
     isOverSize = false;
   }
+  
+  console.log(`ttttt`+returnedFlag.getFlag());
 
   const obj = {
     partNumber: partNumber,
@@ -5169,6 +5227,7 @@ const shipping = () => {
 
   if (shippingMethod == "fedExAir") {
     shippingCharge = 12;
+    returnedFlag
   }
 
   if (shippingMethod == "postal") {
@@ -5188,10 +5247,30 @@ module.exports = {
   getElById,
   customerInfo,
   partOrdered,
-  shipping
+  shipping,
+  returnedFlag
 };
 
-},{"./Validation":38}],38:[function(require,module,exports){
+},{"./ValidateFlag":38,"./Validation":39}],38:[function(require,module,exports){
+class ValidateFlag {
+  constructor() {
+    this.flag = false;
+  }
+
+  setFlag(flag) {
+    this.flag = flag;
+  }
+
+  getFlag() {
+    return this.flag;
+  }
+}
+
+module.exports = {
+  ValidateFlag
+};
+
+},{}],39:[function(require,module,exports){
 /**
  * returns the element whose id is specified
  * @param {String} id
@@ -5249,7 +5328,7 @@ module.exports = {
   setStyle
 };
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

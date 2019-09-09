@@ -1,4 +1,7 @@
 const Validation = require(`./Validation`);
+const valFlagModel = require('./ValidateFlag');
+
+const returnedFlag = new valFlagModel.ValidateFlag();
 
 const getValueById = id => {
   return document.getElementById(id).value;
@@ -8,6 +11,8 @@ const getElById = id => {
   return document.getElementById(id);
 };
 
+
+
 /**
  * get customer info
  */
@@ -15,12 +20,18 @@ const customerInfo = () => {
   
   // get id
   const customerId = getValueById("customer-id-input");
+
   // validate id
   let validateCustomerId = Validation.validateValue(`customer-id-input`,/^\d{3}-\d{2}-\d{4}$/,`customer_span`,`please check id format`);
+
   // check if id format is not valid
   if(validateCustomerId == false){
-    return;
+      returnedFlag.setFlag(false);
+  }else{
+    returnedFlag.setFlag(true);
   }
+
+  console.log(`customer id`,returnedFlag.getFlag());
 
   // get name
   const customerName = getValueById("customer-name-input");
@@ -29,13 +40,19 @@ const customerInfo = () => {
   // check if name is empty
   if(customerName == '' || customerName == null){
     Validation.setStyle(`name_span`,`name can't be empty`);
-    return;
+    returnedFlag.setFlag(false);
+  }else{
+    returnedFlag.setFlag(true);
   }
 
   // check is name format is not valid
   if(validateCustomerName == false){
-    return;
+    returnedFlag.setFlag(false);
+  }else{
+    returnedFlag.setFlag(true);
   }
+
+  console.log(`customer name`,returnedFlag.getFlag());
 
   // get state
   const state = getValueById("customer-state-input");
@@ -71,11 +88,17 @@ const partOrdered = () => {
   // check if part number is empty
   if(partNumber == '' || partNumber == null){
     Validation.setStyle(`number_span`,`part number can't be empty`);
-    return;
+    returnedFlag.setFlag(false);
   }
+  else{
+    returnedFlag.setFlag(true);
+  }
+
   // check if part number format is not valid
   if(validatePartNumber == false){
-    return;
+    returnedFlag.setFlag(false);
+  }else{
+    returnedFlag.setFlag(true);
   }
 
   // get description
@@ -92,31 +115,34 @@ const partOrdered = () => {
     if(pricePerPart.charCodeAt(0) < 48 || pricePerPart.charCodeAt(0) > 57){
       console.log(`1`)
       Validation.setStyle(`price_span`,`please check your price input`);
-      return;
+      returnedFlag.setFlag(false);
     }else{
       Validation.setStyle(`price_span`,``);
+      returnedFlag.setFlag(true);
     }
-
     
     // make sure the last character is a digit
     if(pricePerPart.charCodeAt(pricePerPart.length-1) < 48 || pricePerPart.charCodeAt(pricePerPart.length-1) > 57){
       console.log(`2`)
       Validation.setStyle(`price_span`,`please check your price input`);
-      return;
+      returnedFlag.setFlag(false);
     }else{
       Validation.setStyle(`price_span`,``);
+      returnedFlag.setFlag(true);
     }
 
     if(pricePerPart.charCodeAt(i) < 46 || pricePerPart.charCodeAt(i) >57 ){
         console.log(`3`);
         Validation.setStyle(`price_span`,`please check your price input`);
-      return;
+        returnedFlag.setFlag(false);
     }else{
       Validation.setStyle(`price_span`,``);
+      returnedFlag.setFlag(true);
     }
 
   }
 
+  console.log(`fdskljgb;kdfnkflb`,returnedFlag.getFlag());
 
   // get quantity
   const quantity = getValueById("quantity-input");
@@ -125,13 +151,12 @@ const partOrdered = () => {
   for(let i = 0; i < quantityArray.length; i++){
     if(quantity.charCodeAt(i) < 48 || quantity.charCodeAt(i) > 58){
       Validation.setStyle(`quantity_span`,`please check your quantity input`);
-      return;
+      returnedFlag.setFlag(false);
     }else{
       Validation.setStyle(`quantity_span`,``);
+      returnedFlag.setFlag(true);
     }
   }
-
-
 
   const overSizeEl = getElById("oversize");
 
@@ -142,6 +167,8 @@ const partOrdered = () => {
   } else {
     isOverSize = false;
   }
+  
+  console.log(`ttttt`+returnedFlag.getFlag());
 
   const obj = {
     partNumber: partNumber,
@@ -173,6 +200,7 @@ const shipping = () => {
 
   if (shippingMethod == "fedExAir") {
     shippingCharge = 12;
+    returnedFlag
   }
 
   if (shippingMethod == "postal") {
@@ -192,5 +220,6 @@ module.exports = {
   getElById,
   customerInfo,
   partOrdered,
-  shipping
+  shipping,
+  returnedFlag
 };
