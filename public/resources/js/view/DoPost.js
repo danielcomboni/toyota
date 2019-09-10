@@ -80,3 +80,27 @@ const doPost = () => {
 };
 
 doPost();
+
+/**
+ * clear fields
+ */
+const clearFields = () => {
+  document.getElementById(`new-order-btn`).addEventListener(`click`, e => {
+    for (let i = 0; i < document.getElementsByTagName("input").length; i++) {
+      // clear fields of type text
+      if (document.getElementsByTagName("input")[i].type == `text`) {
+        document.getElementsByTagName("input")[i].value = "";
+      }
+    }
+
+    for (
+      let i = 0;
+      i < document.getElementsByClassName("output-result").length;
+      i++
+    ) {
+      document.getElementsByClassName("output-result")[i].textContent = "";
+    }
+  });
+};
+
+clearFields();

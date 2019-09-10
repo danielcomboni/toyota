@@ -4940,12 +4940,39 @@ const doPost = () => {
 
 doPost();
 
+/**
+ * clear fields
+ */
+const clearFields = () => {
+  document.getElementById(`new-order-btn`).addEventListener(`click`, e => {
+    for (let i = 0; i < document.getElementsByTagName("input").length; i++) {
+      // clear fields of type text
+      if (document.getElementsByTagName("input")[i].type == `text`) {
+        document.getElementsByTagName("input")[i].value = "";
+      }
+    }
+
+    for (
+      let i = 0;
+      i < document.getElementsByClassName("output-result").length;
+      i++
+    ) {
+      document.getElementsByClassName("output-result")[i].textContent = "";
+    }
+  });
+};
+
+clearFields();
+
 },{"./OutPutView":36,"./PickFormValues":37,"axios":1,"sweetalert2":27}],36:[function(require,module,exports){
 /**
  * @author Daniel Comboni
  *
  */
 
+/**
+ * importing models and controller files
+ */
 const partOrderedController = require("../controller/PartOrderedController");
 const customerInfoCOntroller = require("../controller/CustomerInformationController");
 const shippingAndHandlingController = require("../controller/ShippingAndHandlingController");
@@ -4985,22 +5012,25 @@ const printOutPut = objectToBreakDown => {
       outPut.setSalesTax(0.1 * outPut.getCost());
       pickFromDom.getElById(
         "sales-tax"
-      ).textContent = outPut.getSalesTax().toFixed(2);
-    } else {
+      ).textContent = `$ ${outPut.getSalesTax().toFixed(2)}`;
+    }
+
+    // otherwise the user is not a retailer
+    else {
       outPut.setSalesTax(0.05 * outPut.getCost());
       pickFromDom.getElById(
         "sales-tax"
-      ).textContent = outPut.getSalesTax().toFixed(2);
+      ).textContent = `$ ${outPut.getSalesTax().toFixed(2)}`;
     }
   }
 
   // display cost to the UI
-  pickFromDom.getElById("cost").textContent = outPut.getCost().toFixed(2);
+  pickFromDom.getElById("cost").textContent = `$ ${outPut.getCost().toFixed(2)}`;
 
   // display shipping and handling to the UI
-  pickFromDom.getElById("shipping").textContent = (
+  pickFromDom.getElById("shipping").textContent = `$ ${(
     partOrdered.getQuantity() * shippingAndHandling.getChargePerPart()
-  ).toFixed(2);
+  ).toFixed(2)}`;
 
   let total = 0;
 
@@ -5020,7 +5050,7 @@ const printOutPut = objectToBreakDown => {
   }
 
   // display total to the UI
-  pickFromDom.getElById("total").textContent = total.toFixed(2);
+  pickFromDom.getElById("total").textContent = `$ ${total.toFixed(2)}`;
 };
 
 module.exports = {
