@@ -36,7 +36,7 @@ const validateEmptyField = (spanId, spanMessage, value) => {
 };
 
 const validateValue = (inputId, rule, spanId, spanMessage) => {
-  let inputValue = getValueById(inputId);
+  let inputValue = getValueById(inputId).trim();
   let ruleIn = new RegExp();
   ruleIn = rule;
   let flag = false;
@@ -46,6 +46,11 @@ const validateValue = (inputId, rule, spanId, spanMessage) => {
     setStyle(spanId, ``);
     flag = true;
   }
+
+  if (inputValue == "" || inputValue == null) {
+    flag =false;
+  }
+
   return flag;
 };
 

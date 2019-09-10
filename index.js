@@ -1,7 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
 const parser = require("body-parser");
-const crypto = require("crypto");
 const mysql = require("mysql");
 
 const app = express();

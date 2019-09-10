@@ -1,5 +1,5 @@
 const Validation = require(`./Validation`);
-const valFlagModel = require('./ValidateFlag');
+const valFlagModel = require("./ValidateFlag");
 
 const returnedFlag = new valFlagModel.ValidateFlag();
 
@@ -11,53 +11,58 @@ const getElById = id => {
   return document.getElementById(id);
 };
 
-
-
 /**
  * get customer info
  */
 const customerInfo = () => {
-  
   // get id
   const customerId = getValueById("customer-id-input");
 
   // validate id
-  let validateCustomerId = Validation.validateValue(`customer-id-input`,/^\d{3}-\d{2}-\d{4}$/,`customer_span`,`please check id format`);
+  let validateCustomerId = Validation.validateValue(
+    `customer-id-input`,
+    /^\d{3}-\d{2}-\d{4}$/,
+    `customer_span`,
+    `please check id format`
+  );
 
   // check if id format is not valid
-  if(validateCustomerId == false){
-      returnedFlag.setFlag(false);
-  }else{
+  if (validateCustomerId == false) {
+    returnedFlag.setFlag(false);
+  } else {
     returnedFlag.setFlag(true);
   }
 
-  console.log(`customer id`,returnedFlag.getFlag());
 
   // get name
-  const customerName = getValueById("customer-name-input");
+  const customerName = getValueById("customer-name-input").trim();
   // validate name
-  let validateCustomerName = Validation.validateValue(`customer-name-input`, /^[a-zA-Z\s]*$/  , `name_span`, 'letters & spaces only please');
+  let validateCustomerName = Validation.validateValue(
+    `customer-name-input`,
+    /^[a-zA-Z\s]*$/,
+    `name_span`,
+    "letters & spaces only please"
+  );
   // check if name is empty
-  if(customerName == '' || customerName == null){
-    Validation.setStyle(`name_span`,`name can't be empty`);
+  if (customerName == "" || customerName == null) {
+    Validation.setStyle(`name_span`, `name can't be empty`);
     returnedFlag.setFlag(false);
-  }else{
+  } else {
     returnedFlag.setFlag(true);
   }
 
   // check is name format is not valid
-  if(validateCustomerName == false){
+  if (validateCustomerName == false) {
     returnedFlag.setFlag(false);
-  }else{
+  } else {
     returnedFlag.setFlag(true);
   }
 
-  console.log(`customer name`,returnedFlag.getFlag());
 
   // get state
   const state = getValueById("customer-state-input");
 
-  // get boolean of retail 
+  // get boolean of retail
   const retailId = getElById("customer-retail-input");
   let isRetail = false;
 
@@ -80,84 +85,103 @@ const customerInfo = () => {
  * get part ordered
  */
 const partOrdered = () => {
-
   // get part number
   const partNumber = getValueById("part-number-input");
   // validate part number
-  let validatePartNumber = Validation.validateValue(`part-number-input`, /^[0-9]*$/  , `number_span`, 'numbers only');
+  let validatePartNumber = Validation.validateValue(
+    `part-number-input`,
+    /^[0-9]*$/,
+    `number_span`,
+    "numbers only"
+  );
   // check if part number is empty
-  if(partNumber == '' || partNumber == null){
-    Validation.setStyle(`number_span`,`part number can't be empty`);
+  if (partNumber == "" || partNumber == null) {
+    Validation.setStyle(`number_span`, `part number can't be empty`);
     returnedFlag.setFlag(false);
-  }
-  else{
+  } else {
     returnedFlag.setFlag(true);
   }
 
   // check if part number format is not valid
-  if(validatePartNumber == false){
+  if (validatePartNumber == false) {
     returnedFlag.setFlag(false);
-  }else{
+  } else {
     returnedFlag.setFlag(true);
   }
 
   // get description
   const description = getValueById("description-input");
-  
+
   // get price per part
   const pricePerPart = getValueById("price-per-part-input").trim();
 
   const priceArr = [...pricePerPart];
 
-  for(let i=0; i < priceArr.length; i++){
-
-    // make sure first character is not 
-    if(pricePerPart.charCodeAt(0) < 48 || pricePerPart.charCodeAt(0) > 57){
-      console.log(`1`)
-      Validation.setStyle(`price_span`,`please check your price input`);
-      returnedFlag.setFlag(false);
-    }else{
-      Validation.setStyle(`price_span`,``);
-      returnedFlag.setFlag(true);
-    }
-    
-    // make sure the last character is a digit
-    if(pricePerPart.charCodeAt(pricePerPart.length-1) < 48 || pricePerPart.charCodeAt(pricePerPart.length-1) > 57){
-      console.log(`2`)
-      Validation.setStyle(`price_span`,`please check your price input`);
-      returnedFlag.setFlag(false);
-    }else{
-      Validation.setStyle(`price_span`,``);
-      returnedFlag.setFlag(true);
-    }
-
-    if(pricePerPart.charCodeAt(i) < 46 || pricePerPart.charCodeAt(i) >57 ){
-        console.log(`3`);
-        Validation.setStyle(`price_span`,`please check your price input`);
-        returnedFlag.setFlag(false);
-    }else{
-      Validation.setStyle(`price_span`,``);
-      returnedFlag.setFlag(true);
-    }
-
+  // if price is empty
+  if (pricePerPart == null || pricePerPart == "") {
+    Validation.setStyle(`price_span`, `price can not be empty`);
+    returnedFlag.setFlag(false);
   }
 
-  console.log(`fdskljgb;kdfnkflb`,returnedFlag.getFlag());
+  // if not empty
+  else {
+    for (let i = 0; i < priceArr.length; i++) {
+      // make sure first character is not
+      if (pricePerPart.charCodeAt(0) < 48 || pricePerPart.charCodeAt(0) > 57) {
+        Validation.setStyle(`price_span`, `please check your price input`);
+        returnedFlag.setFlag(false);
+      } else {
+        Validation.setStyle(`price_span`, ``);
+        returnedFlag.setFlag(true);
+      }
+
+      // make sure the last character is a digit
+      if (
+        pricePerPart.charCodeAt(pricePerPart.length - 1) < 48 ||
+        pricePerPart.charCodeAt(pricePerPart.length - 1) > 57
+      ) {
+        Validation.setStyle(`price_span`, `please check your price input`);
+        returnedFlag.setFlag(false);
+      } else {
+        Validation.setStyle(`price_span`, ``);
+        returnedFlag.setFlag(true);
+      }
+
+      if (pricePerPart.charCodeAt(i) < 46 || pricePerPart.charCodeAt(i) > 57) {
+        Validation.setStyle(`price_span`, `please check your price input`);
+        returnedFlag.setFlag(false);
+      } else {
+        Validation.setStyle(`price_span`, ``);
+        returnedFlag.setFlag(true);
+      }
+    }
+  }
 
   // get quantity
-  const quantity = getValueById("quantity-input");
+  const quantity = getValueById("quantity-input").trim();
   const quantityArray = [...quantity];
 
-  for(let i = 0; i < quantityArray.length; i++){
-    if(quantity.charCodeAt(i) < 48 || quantity.charCodeAt(i) > 58){
-      Validation.setStyle(`quantity_span`,`please check your quantity input`);
-      returnedFlag.setFlag(false);
-    }else{
-      Validation.setStyle(`quantity_span`,``);
-      returnedFlag.setFlag(true);
-    }
+  // check if empty
+  if (quantity == null || quantity == "") {
+    Validation.setStyle(`quantity_span`, `quantity can not be empty`);
+    returnedFlag.setFlag(false);
   }
 
+  // otherwise , not empty
+  else {
+    for (let i = 0; i < quantityArray.length; i++) {
+      if (quantity.charCodeAt(i) < 48 || quantity.charCodeAt(i) > 58) {
+        Validation.setStyle(
+          `quantity_span`,
+          `please check your quantity input`
+        );
+        returnedFlag.setFlag(false);
+      } else {
+        Validation.setStyle(`quantity_span`, ``);
+        returnedFlag.setFlag(true);
+      }
+    }
+  }
   const overSizeEl = getElById("oversize");
 
   let isOverSize = false;
@@ -167,8 +191,7 @@ const partOrdered = () => {
   } else {
     isOverSize = false;
   }
-  
-  console.log(`ttttt`+returnedFlag.getFlag());
+
 
   const obj = {
     partNumber: partNumber,
@@ -200,7 +223,7 @@ const shipping = () => {
 
   if (shippingMethod == "fedExAir") {
     shippingCharge = 12;
-    returnedFlag
+    returnedFlag;
   }
 
   if (shippingMethod == "postal") {
