@@ -4857,6 +4857,13 @@ module.exports = {
 };
 
 },{}],35:[function(require,module,exports){
+/**
+ * @author Daniel Comboni
+ *
+ *
+ *
+ */
+
 const swal = require("sweetalert2");
 const pickFormValues = require("./PickFormValues");
 const outPutView = require("./OutPutView");
@@ -4874,6 +4881,20 @@ const swalMessage = (title, type, text) => {
   });
 };
 
+const showToast = (position, title, type) => {
+  const Toast = swal.mixin({
+    toast: true,
+    position: position,
+    showConfirmButton: false,
+    timer: 3000
+  });
+
+  Toast.fire({
+    title: title,
+    type: type
+  });
+};
+
 const axiosPost = () => {
   const data = {
     customerInfo: pickFormValues.customerInfo(),
@@ -4882,7 +4903,7 @@ const axiosPost = () => {
   };
 
   if (pickFormValues.returnedFlag.getFlag() == false) {
-    swalMessage(`wrong inputs`, `warning`, `please re-check your inputs`);
+    showToast("top-end", "wrong inputs", "error");
     return;
   }
 
@@ -4905,28 +4926,14 @@ const axiosPost = () => {
         axios
           .post("/api/toyota/post", { data })
           .then(res => {
-            // output to the UI
-
-            swal.fire({
-              position: "top-end",
-              type: "success",
-              title: "successully saved",
-              showConfirmButton: false,
-              timer: 2000
-            });
+            showToast(`center`, `successfully saved`, `success`);
           })
           .catch(error => {
             console.log("error", error);
-            swal.fire({
-              position: "center",
-              type: "error",
-              title: "something was wrong",
-              showConfirmButton: false,
-              timer: 2000
-            });
+            showToast(`center`, `error`, `something went wrong`);
           });
       } else {
-        swalMessage(`message`, `warning`, `operation cancelled`);
+        showToast(`center`, `operation was cancelled`, `warning`);
       }
     });
 };
@@ -4938,6 +4945,9 @@ const doPost = () => {
   });
 };
 
+/**
+ * posting
+ */
 doPost();
 
 /**
@@ -4963,6 +4973,15 @@ const clearFields = () => {
 };
 
 clearFields();
+
+const exit = () => {
+  document.getElementById("exit").addEventListener("click", () => {
+    document.write("you exited");
+    showToast("center", "you exited", "success");
+  });
+};
+
+exit();
 
 },{"./OutPutView":36,"./PickFormValues":37,"axios":1,"sweetalert2":27}],36:[function(require,module,exports){
 /**
@@ -5349,11 +5368,6 @@ const setStyle = (id, text) => {
   getElById(id).style.color = "red";
 };
 
-/**
- * an array to carry all flags
- */
-let allFlags = [];
-
 const validateEmptyField = (spanId, spanMessage, value) => {
   if (value == null || value == "" || value === " ") {
     setStyle(spanId, `${spanMessage}`);
@@ -5369,6 +5383,7 @@ const validateValue = (inputId, rule, spanId, spanMessage) => {
   let ruleIn = new RegExp();
   ruleIn = rule;
   let flag = false;
+
   if (rule.test(inputValue) == false) {
     setStyle(spanId, `${spanMessage}`);
   } else {
@@ -5377,7 +5392,7 @@ const validateValue = (inputId, rule, spanId, spanMessage) => {
   }
 
   if (inputValue == "" || inputValue == null) {
-    flag =false;
+    flag = false;
   }
 
   return flag;

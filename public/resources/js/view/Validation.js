@@ -20,11 +20,6 @@ const setStyle = (id, text) => {
   getElById(id).style.color = "red";
 };
 
-/**
- * an array to carry all flags
- */
-let allFlags = [];
-
 const validateEmptyField = (spanId, spanMessage, value) => {
   if (value == null || value == "" || value === " ") {
     setStyle(spanId, `${spanMessage}`);
@@ -40,6 +35,7 @@ const validateValue = (inputId, rule, spanId, spanMessage) => {
   let ruleIn = new RegExp();
   ruleIn = rule;
   let flag = false;
+
   if (rule.test(inputValue) == false) {
     setStyle(spanId, `${spanMessage}`);
   } else {
@@ -48,7 +44,7 @@ const validateValue = (inputId, rule, spanId, spanMessage) => {
   }
 
   if (inputValue == "" || inputValue == null) {
-    flag =false;
+    flag = false;
   }
 
   return flag;

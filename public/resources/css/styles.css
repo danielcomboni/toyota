@@ -1,6 +1,7 @@
 body {
   margin: 0px;
   padding-top: 0;
+  background-color: teal;
 }
 
 .container {
@@ -185,7 +186,8 @@ body {
   width: 150px;
   height: 40px;
   border-radius: 5px;
-  background-color: #ffbf82;
+  color: white;
+  background-color: #192236;
   border: none;
   border: 1px solid white;
 }
@@ -199,7 +201,7 @@ body {
   height: 40px;
   border-radius: 5px;
   border: none;
-  background-color: #ffbf82;
+  background-color: #192236;
   margin-left: 10px;
   border: 1px solid white;
 }
@@ -215,7 +217,7 @@ body {
   border: none;
   margin-top: 10px;
   margin-left: 230px;
-  background-color: #ffbf82;
+  background-color: #192236;
   border: 1px solid white;
 }
 
@@ -381,4 +383,9 @@ input[type="text"] {
 .output-result {
   padding: 5px;
   border-radius: 5px;
+}
+
+input[type="button"] {
+  color: white;
+  background-color: #192236;
 }
