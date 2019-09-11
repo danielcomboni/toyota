@@ -33,7 +33,6 @@ const customerInfo = () => {
     returnedFlag.setFlag(true);
   }
 
-
   // get name
   const customerName = getValueById("customer-name-input").trim();
   // validate name
@@ -57,7 +56,6 @@ const customerInfo = () => {
   } else {
     returnedFlag.setFlag(true);
   }
-
 
   // get state
   const state = getValueById("customer-state-input");
@@ -182,6 +180,7 @@ const partOrdered = () => {
       }
     }
   }
+
   const overSizeEl = getElById("oversize");
 
   let isOverSize = false;
@@ -191,7 +190,6 @@ const partOrdered = () => {
   } else {
     isOverSize = false;
   }
-
 
   const obj = {
     partNumber: partNumber,
@@ -214,20 +212,35 @@ const shipping = () => {
   let shippingCharge = 0;
 
   if (shippingMethod == "ups") {
-    shippingCharge = 7;
+    if (partOrdered().overSizeContainer == true) {
+      shippingCharge = 7 + 5;
+    } else {
+      shippingCharge = 7;
+    }
   }
 
   if (shippingMethod == "fedExGround") {
-    shippingCharge = 9.25;
+    if (partOrdered().overSizeContainer == true) {
+      shippingCharge = 9.25 + 5;
+    } else {
+      shippingCharge = 9.25;
+    }
   }
 
   if (shippingMethod == "fedExAir") {
-    shippingCharge = 12;
-    returnedFlag;
+    if (partOrdered().overSizeContainer == true) {
+      shippingCharge = 12 + 5;
+    } else {
+      shippingCharge = 12;
+    }
   }
 
   if (shippingMethod == "postal") {
-    shippingCharge = 8.5;
+    if (partOrdered().overSizeContainer == true) {
+      shippingCharge = 8.5 + 5;
+    } else {
+      shippingCharge = 8.5;
+    }
   }
 
   let shippingAndHandling = {

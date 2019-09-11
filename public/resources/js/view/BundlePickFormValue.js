@@ -4885,6 +4885,7 @@ const showToast = (position, title, type) => {
   const Toast = swal.mixin({
     toast: true,
     position: position,
+    // background:`#123` this works
     showConfirmButton: false,
     timer: 3000
   });
@@ -4895,6 +4896,80 @@ const showToast = (position, title, type) => {
   });
 };
 
+const onChangingChoice = () => {
+  const shippingMethod = document.querySelectorAll(
+    'input[name="shippingChoice"]'
+  );
+  // const shippingMethod = document.querySelector(
+  //   'input[name="shippingChoice"]:checked'
+  // )
+  console.log(`s`, shippingMethod);
+
+  for (let i = 0; i < shippingMethod.length; i++) {
+    console.log(shippingMethod[i]);
+
+    shippingMethod[i].addEventListener("change", e => {
+      const data = {
+        customerInfo: pickFormValues.customerInfo(),
+        partOrdered: pickFormValues.partOrdered(),
+        shipping: pickFormValues.shipping()
+      };
+
+      if (pickFormValues.returnedFlag.getFlag() == false) {
+        showToast("top-end", "wrong inputs", "error");
+        return;
+      }
+
+      outPutView.printOutPut(data);
+    });
+  }
+};
+
+onChangingChoice();
+
+const isRetailCustomerHandler = () => {
+  document
+    .getElementById(`customer-retail-input`)
+    .addEventListener(`change`, e => {
+      const data = {
+        customerInfo: pickFormValues.customerInfo(),
+        partOrdered: pickFormValues.partOrdered(),
+        shipping: pickFormValues.shipping()
+      };
+
+      if (pickFormValues.returnedFlag.getFlag() == false) {
+        showToast("top-end", "wrong inputs", "error");
+        return;
+      }
+
+      outPutView.printOutPut(data);
+    });
+};
+
+isRetailCustomerHandler();
+
+const isOverSizeHandler = () => {
+  document.getElementById(`oversize`).addEventListener(`change`, e => {
+    const data = {
+      customerInfo: pickFormValues.customerInfo(),
+      partOrdered: pickFormValues.partOrdered(),
+      shipping: pickFormValues.shipping()
+    };
+
+    if (pickFormValues.returnedFlag.getFlag() == false) {
+      showToast("top-end", "wrong inputs", "error");
+      return;
+    }
+
+    outPutView.printOutPut(data);
+  });
+};
+
+isOverSizeHandler();
+
+/**
+ * posting with axios
+ */
 const axiosPost = () => {
   const data = {
     customerInfo: pickFormValues.customerInfo(),
@@ -5027,6 +5102,7 @@ const printOutPut = objectToBreakDown => {
 
   // determine if the customer is a retailer or not
   if (customerInfo.isRetailCustomer() == true) {
+    // if state is kampala
     if (customerInfo.getState() == "kla") {
       outPut.setSalesTax(0.1 * outPut.getCost());
       pickFromDom.getElById(
@@ -5041,32 +5117,24 @@ const printOutPut = objectToBreakDown => {
         "sales-tax"
       ).textContent = `$ ${outPut.getSalesTax().toFixed(2)}`;
     }
+  } else {
+    pickFromDom.getElById("sales-tax").textContent = `$ ${0.0}`;
   }
 
   // display cost to the UI
-  pickFromDom.getElById("cost").textContent = `$ ${outPut.getCost().toFixed(2)}`;
+  pickFromDom.getElById("cost").textContent = `$ ${outPut
+    .getCost()
+    .toFixed(2)}`;
 
   // display shipping and handling to the UI
   pickFromDom.getElById("shipping").textContent = `$ ${(
     partOrdered.getQuantity() * shippingAndHandling.getChargePerPart()
   ).toFixed(2)}`;
 
-  let total = 0;
-
-  // check if the container is oversize then add $5 to the total
-  // else leave as is
-  if (partOrdered.isOverSizeContainer() == true) {
-    total =
-      outPut.getCost() +
-      outPut.getSalesTax() +
-      partOrdered.getQuantity() * shippingAndHandling.getChargePerPart() +
-      5;
-  } else {
-    total =
-      outPut.getCost() +
-      outPut.getSalesTax() +
-      partOrdered.getQuantity() * shippingAndHandling.getChargePerPart();
-  }
+  let total =
+    outPut.getCost() +
+    outPut.getSalesTax() +
+    partOrdered.getQuantity() * shippingAndHandling.getChargePerPart();
 
   // display total to the UI
   pickFromDom.getElById("total").textContent = `$ ${total.toFixed(2)}`;
@@ -5112,7 +5180,6 @@ const customerInfo = () => {
     returnedFlag.setFlag(true);
   }
 
-
   // get name
   const customerName = getValueById("customer-name-input").trim();
   // validate name
@@ -5136,7 +5203,6 @@ const customerInfo = () => {
   } else {
     returnedFlag.setFlag(true);
   }
-
 
   // get state
   const state = getValueById("customer-state-input");
@@ -5261,6 +5327,7 @@ const partOrdered = () => {
       }
     }
   }
+
   const overSizeEl = getElById("oversize");
 
   let isOverSize = false;
@@ -5270,7 +5337,6 @@ const partOrdered = () => {
   } else {
     isOverSize = false;
   }
-
 
   const obj = {
     partNumber: partNumber,
@@ -5293,20 +5359,35 @@ const shipping = () => {
   let shippingCharge = 0;
 
   if (shippingMethod == "ups") {
-    shippingCharge = 7;
+    if (partOrdered().overSizeContainer == true) {
+      shippingCharge = 7 + 5;
+    } else {
+      shippingCharge = 7;
+    }
   }
 
   if (shippingMethod == "fedExGround") {
-    shippingCharge = 9.25;
+    if (partOrdered().overSizeContainer == true) {
+      shippingCharge = 9.25 + 5;
+    } else {
+      shippingCharge = 9.25;
+    }
   }
 
   if (shippingMethod == "fedExAir") {
-    shippingCharge = 12;
-    returnedFlag;
+    if (partOrdered().overSizeContainer == true) {
+      shippingCharge = 12 + 5;
+    } else {
+      shippingCharge = 12;
+    }
   }
 
   if (shippingMethod == "postal") {
-    shippingCharge = 8.5;
+    if (partOrdered().overSizeContainer == true) {
+      shippingCharge = 8.5 + 5;
+    } else {
+      shippingCharge = 8.5;
+    }
   }
 
   let shippingAndHandling = {

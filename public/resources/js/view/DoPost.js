@@ -26,6 +26,7 @@ const showToast = (position, title, type) => {
   const Toast = swal.mixin({
     toast: true,
     position: position,
+    // background:`#123` this works
     showConfirmButton: false,
     timer: 3000
   });
@@ -36,6 +37,80 @@ const showToast = (position, title, type) => {
   });
 };
 
+const onChangingChoice = () => {
+  const shippingMethod = document.querySelectorAll(
+    'input[name="shippingChoice"]'
+  );
+  // const shippingMethod = document.querySelector(
+  //   'input[name="shippingChoice"]:checked'
+  // )
+  console.log(`s`, shippingMethod);
+
+  for (let i = 0; i < shippingMethod.length; i++) {
+    console.log(shippingMethod[i]);
+
+    shippingMethod[i].addEventListener("change", e => {
+      const data = {
+        customerInfo: pickFormValues.customerInfo(),
+        partOrdered: pickFormValues.partOrdered(),
+        shipping: pickFormValues.shipping()
+      };
+
+      if (pickFormValues.returnedFlag.getFlag() == false) {
+        showToast("top-end", "wrong inputs", "error");
+        return;
+      }
+
+      outPutView.printOutPut(data);
+    });
+  }
+};
+
+onChangingChoice();
+
+const isRetailCustomerHandler = () => {
+  document
+    .getElementById(`customer-retail-input`)
+    .addEventListener(`change`, e => {
+      const data = {
+        customerInfo: pickFormValues.customerInfo(),
+        partOrdered: pickFormValues.partOrdered(),
+        shipping: pickFormValues.shipping()
+      };
+
+      if (pickFormValues.returnedFlag.getFlag() == false) {
+        showToast("top-end", "wrong inputs", "error");
+        return;
+      }
+
+      outPutView.printOutPut(data);
+    });
+};
+
+isRetailCustomerHandler();
+
+const isOverSizeHandler = () => {
+  document.getElementById(`oversize`).addEventListener(`change`, e => {
+    const data = {
+      customerInfo: pickFormValues.customerInfo(),
+      partOrdered: pickFormValues.partOrdered(),
+      shipping: pickFormValues.shipping()
+    };
+
+    if (pickFormValues.returnedFlag.getFlag() == false) {
+      showToast("top-end", "wrong inputs", "error");
+      return;
+    }
+
+    outPutView.printOutPut(data);
+  });
+};
+
+isOverSizeHandler();
+
+/**
+ * posting with axios
+ */
 const axiosPost = () => {
   const data = {
     customerInfo: pickFormValues.customerInfo(),

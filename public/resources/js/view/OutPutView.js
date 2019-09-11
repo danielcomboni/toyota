@@ -41,6 +41,7 @@ const printOutPut = objectToBreakDown => {
 
   // determine if the customer is a retailer or not
   if (customerInfo.isRetailCustomer() == true) {
+    // if state is kampala
     if (customerInfo.getState() == "kla") {
       outPut.setSalesTax(0.1 * outPut.getCost());
       pickFromDom.getElById(
@@ -55,32 +56,24 @@ const printOutPut = objectToBreakDown => {
         "sales-tax"
       ).textContent = `$ ${outPut.getSalesTax().toFixed(2)}`;
     }
+  } else {
+    pickFromDom.getElById("sales-tax").textContent = `$ ${0.0}`;
   }
 
   // display cost to the UI
-  pickFromDom.getElById("cost").textContent = `$ ${outPut.getCost().toFixed(2)}`;
+  pickFromDom.getElById("cost").textContent = `$ ${outPut
+    .getCost()
+    .toFixed(2)}`;
 
   // display shipping and handling to the UI
   pickFromDom.getElById("shipping").textContent = `$ ${(
     partOrdered.getQuantity() * shippingAndHandling.getChargePerPart()
   ).toFixed(2)}`;
 
-  let total = 0;
-
-  // check if the container is oversize then add $5 to the total
-  // else leave as is
-  if (partOrdered.isOverSizeContainer() == true) {
-    total =
-      outPut.getCost() +
-      outPut.getSalesTax() +
-      partOrdered.getQuantity() * shippingAndHandling.getChargePerPart() +
-      5;
-  } else {
-    total =
-      outPut.getCost() +
-      outPut.getSalesTax() +
-      partOrdered.getQuantity() * shippingAndHandling.getChargePerPart();
-  }
+  let total =
+    outPut.getCost() +
+    outPut.getSalesTax() +
+    partOrdered.getQuantity() * shippingAndHandling.getChargePerPart();
 
   // display total to the UI
   pickFromDom.getElById("total").textContent = `$ ${total.toFixed(2)}`;
